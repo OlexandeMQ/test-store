@@ -30,6 +30,135 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
+      /*vertical slider  */
+        {% if section.settings.gallery_layout == 'thumbnail_slider' and section.settings.enable_vertical_slider %}
+
+            {% if product.images.size > 1 %}
+             @media screen and (min-width:1100px) {
+                [data-desktop-layout="thumbnail_slider"] {
+                display: flex;
+                flex-direction: row-reverse;
+                /* max-height:300px; */
+                margin-bottom:20px;
+                gap:8px;
+              }
+              slider-component{
+                width:100%;
+                height:fit-content;
+              }
+              .product--thumbnail_slider .thumbnail-slider {
+                width:22%;
+            }
+
+
+          .thumbnail-slider .thumbnail-list.slider--tablet-up {
+              flex-direction: column;
+              padding-top: 0;
+              overflow-y: auto;
+              scroll-snap-type: y mandatory;
+              scroll-behavior: smooth;
+              overflow-x: hidden;
+              max-height: 480px;
+          }
+
+            .thumbnail-list.slider--tablet-up .thumbnail-list__item.slider__slide {
+                width: calc(100% - 2.8rem);
+                align-self: center;
+            }
+            .slider-button {
+                display: none !important;
+            }
+            .enable_desktop_slider {
+                margin-bottom: 0;
+            }
+            .enable_desktop_slider + .slider-buttons .slider-button {
+                display: block !important;
+            }
+          }
+
+
+            {% else %}
+
+          @media screen and (min-width:1100px) {
+
+            [data-desktop-layout="thumbnail_slider"] {
+                display: flex;
+                justify-content:center;
+                flex-direction: row-reverse;
+              }
+              slider-component{
+                width:100%;
+                height:fit-content;
+              }
+              .slider.slider--mobile {
+                gap:0;
+              }
+              .breadcrumbs {
+                padding-top:0;
+              }
+              .grid--peek.slider .grid__item:first-of-type {
+                margin-left: 0;
+              }
+              .slider--mobile:after {
+                padding-left:0;
+              }
+               .product--thumbnail_slider .thumbnail-slider{
+                width:25%;
+                align-items: start;
+            }
+
+
+          .thumbnail-slider .thumbnail-list.slider--tablet-up {
+              flex-direction: column;
+              padding-top: 0;
+              overflow-y: auto;
+              scroll-snap-type: y mandatory;
+              scroll-behavior: smooth;
+              overflow-x: hidden;
+              max-height: 480px;
+          }
+
+            .thumbnail-list.slider--tablet-up .thumbnail-list__item.slider__slide {
+                width: calc(100% - 2.8rem);
+                align-self: center;
+            }
+            .slider-button {
+                display: none !important;
+            }
+            .enable_desktop_slider {
+                margin-bottom: 0;
+            }
+            .enable_desktop_slider + .slider-buttons .slider-button {
+                display: block !important;
+            }
+          }
+
+
+            {% endif %}
+
+        {% endif %}
+
+
+        @media screen and (max-width:500px){
+          .thumbnail-slider .thumbnail-list.slider--tablet-up {
+            max-height:300px;
+            gap:5px;
+          }
+
+        }
+
+
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
@@ -70,6 +199,8 @@
     <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
       <div class="grid__item product__media-wrapper">
         {% render 'product-media-gallery', variant_images: variant_images %}
+        {% render 'product-features' %}
+        {% render 'custom-tabs' %}
       </div>
       <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <product-info
@@ -1481,6 +1612,7 @@
         }
       ]
     },
+
     {
       "type": "icon-with-text",
       "name": "t:sections.main-product.blocks.icon_with_text.name",
@@ -2181,6 +2313,13 @@
       ],
       "default": "stacked",
       "label": "t:sections.main-product.settings.gallery_layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_vertical_slider",
+      "default": false,
+      "label": "Vertical slider",
+      "info": "Desktop layout needs to be thumbnail carousel"
     },
     {
       "type": "select",
