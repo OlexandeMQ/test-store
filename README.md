@@ -1,2 +1,0 @@
-# test-store
-dawn-test
